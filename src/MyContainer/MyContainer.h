@@ -2,9 +2,10 @@
 
 #include <cstdlib>
 #include <memory>
+#include "Core.h"
 
 template<typename T, typename TAllocator = std::allocator<T>>
-class MyContainer {
+class API MyContainer {
 private:
     T *arr;
     size_t size{};
@@ -31,13 +32,13 @@ public:
 
 template<typename T, typename TAllocator>
 MyContainer<T, TAllocator>::MyContainer() {
-    arr = reinterpret_cast<T *>(malloc(sizeof(T)));
+    arr = reinterpret_cast<T *>(allocator.allocate(sizeof(T)));
     capacity = 1;
 }
 
 template<typename T, typename TAllocator>
 MyContainer<T, TAllocator>::MyContainer(size_t n, const T& value, const TAllocator alloc) {
-    arr = reinterpret_cast<T *>(malloc(sizeof(T)));
+    arr = reinterpret_cast<T *>(allocator.allocate(sizeof(T)));
     capacity = 1;
 }
 
