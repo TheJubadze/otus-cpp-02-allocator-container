@@ -7,10 +7,14 @@ template<typename T>
 class MyContainer {
 private:
     T *arr;
-    size_t size;
+    size_t size{};
     size_t capacity;
 
+    void DeleteArr() const;
+
 public:
+    MyContainer();
+    virtual ~MyContainer();
     void reserve(size_t n);
     void resize(size_t n, const T &value = T());
     void push_back(const T &value);
@@ -22,7 +26,21 @@ public:
 };
 
 template<typename T>
+MyContainer<T>::MyContainer() {
+    arr = reinterpret_cast<T *>(malloc(sizeof(T)));
+    capacity = 1;
+}
+
+template<typename T>
+MyContainer<T>::~MyContainer() {
+    DeleteArr();
+}
+
+template<typename T>
 void MyContainer<T>::reserve(size_t n) {
+    if (capacity == 0) {
+    }
+
     if (n <= capacity) {
         return;
     }
@@ -36,25 +54,8 @@ void MyContainer<T>::reserve(size_t n) {
         throw;
     }
 
-    size_t i = 0;
+    DeleteArr();
 
-//    try {
-//        for (i = 0; i < size; ++i) {
-//            newarr[i] = new(newarr + i) T(arr[i]);
-//        }
-//    } catch (...) {
-//        for (size_t j = 0; j < i; ++j) {
-//            newarr[i].~T();
-//        }
-//        delete[] reinterpret_cast<int8_t *>(newarr);
-//        throw;
-//    }
-
-    for (i = 0; i < size; ++i) {
-        arr[i].~T();
-    }
-
-    delete[] reinterpret_cast<int8_t *>(arr);
     arr = newarr;
     capacity = n;
 
@@ -78,7 +79,7 @@ void MyContainer<T>::resize(size_t n, const T &value) {
 template<typename T>
 void MyContainer<T>::push_back(const T &value) {
     if (capacity == size) {
-        reserve(1.6 * size);
+        reserve(2 * size);
     }
 
     new(arr + size) T(value);
@@ -101,4 +102,13 @@ T &MyContainer<T>::operator[](size_t index) {
 template<typename T>
 const T &MyContainer<T>::operator[](size_t index) const {
     return arr[index];
+}
+
+template<typename T>
+void MyContainer<T>::DeleteArr() const {
+    for (size_t i = 0; i < this->size; ++i) {
+        this->arr[i].~T();
+    }
+
+    delete[] reinterpret_cast<int8_t *>(this->arr);
 }
