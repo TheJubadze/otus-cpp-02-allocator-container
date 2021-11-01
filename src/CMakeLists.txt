@@ -7,7 +7,7 @@ add_subdirectory(MyAllocator)
 
 add_executable(playground main.cpp)
 target_link_libraries(playground container)
-target_include_directories(playground PRIVATE
-        "${CMAKE_BINARY_DIR}"
+target_include_directories(playground PUBLIC
+        "${PROJECT_SOURCE_DIR}"
         MyContainer
         MyAllocator)

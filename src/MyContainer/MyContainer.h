@@ -5,29 +5,29 @@
 #include "Core.h"
 
 template<typename T, typename TAllocator = std::allocator<T>>
-class API MyContainer{
-        private:
-        T *arr;
-        size_t size{};
-        size_t capacity;
-        TAllocator allocator;
+class API MyContainer {
+private:
+    T *arr;
+    size_t size{};
+    size_t capacity;
+    TAllocator allocator;
 
-        using AllocatorTraits = std::allocator_traits<TAllocator>;
+    using AllocatorTraits = std::allocator_traits<TAllocator>;
 
-        void DeleteArr();
+    void DeleteArr();
 
-        public:
-        MyContainer();
-        explicit MyContainer(size_t, const T& value = T(), TAllocator alloc = TAllocator());
-        virtual ~MyContainer();
-        void reserve(size_t n);
-        void resize(size_t n, const T &value = T());
-        void push_back(const T &value);
+public:
+    MyContainer();
+    explicit MyContainer(size_t, const T &value = T(), TAllocator alloc = TAllocator());
+    virtual ~MyContainer();
+    void reserve(size_t n);
+    void resize(size_t n, const T &value = T());
+    void push_back(const T &value);
 
-        T &at(size_t index);
+    T &at(size_t index);
 
-        T &operator[](size_t index);
-        const T &operator[](size_t index) const;
+    T &operator[](size_t index);
+    const T &operator[](size_t index) const;
 };
 
 template<typename T, typename TAllocator>
@@ -37,8 +37,10 @@ MyContainer<T, TAllocator>::MyContainer() {
 }
 
 template<typename T, typename TAllocator>
-MyContainer<T, TAllocator>::MyContainer(size_t n, const T &value, const TAllocator alloc) {
+MyContainer<T, TAllocator>::MyContainer(size_t n, const T &value, const TAllocator alloc)
+        : size(n), allocator(alloc) {
     arr = allocator.allocate(sizeof(T));
+    arr[size - 1] = value;
     capacity = 1;
 }
 
