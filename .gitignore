@@ -36,6 +36,7 @@
 
 #Idea
 .idea
+.vs
 .vscode/tasks.json
 .vscode/settings.json
 

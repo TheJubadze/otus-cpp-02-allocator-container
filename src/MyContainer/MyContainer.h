@@ -2,10 +2,9 @@
 
 #include <cstdlib>
 #include <memory>
-#include "Core.h"
 
 template<typename T, typename TAllocator = std::allocator<T>>
-class API MyContainer {
+class MyContainer {
 private:
     T *arr;
     size_t size{};

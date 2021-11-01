@@ -1,9 +1,7 @@
 #pragma once
 
-#include "Core.h"
-
 template<typename T>
-class API MyAllocator {
+class MyAllocator {
 public:
     T *allocate(size_t count) const {
         return ::operator new(count * sizeof(T));
