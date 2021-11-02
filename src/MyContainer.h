@@ -53,20 +53,19 @@ void MyContainer<T, TAllocator>::reserve(size_t n) {
         return;
     }
 
-    T *newarr = AllocatorTraits::allocate(alloc, n * sizeof(T));
+    T *newArr = AllocatorTraits::allocate(alloc, n * sizeof(T));
 
     try {
-        std::uninitialized_copy(arr, arr + size, newarr);
+        std::uninitialized_copy(arr, arr + size, newArr);
     } catch (...) {
-        AllocatorTraits::deallocate(alloc, newarr, size);
+        AllocatorTraits::deallocate(alloc, newArr, size);
         throw;
     }
 
     DeleteArr();
 
-    arr = newarr;
+    arr = newArr;
     capacity = n;
-
 }
 
 template<typename T, typename TAllocator>

@@ -5,6 +5,11 @@ class MyAllocator {
 public:
     using value_type = T;
 
+    MyAllocator() = default;
+
+    template<typename U>
+    explicit MyAllocator(const MyAllocator<U> &right) {};
+
     T *allocate(size_t count) const {
         return reinterpret_cast<T *>(::operator new(count * sizeof(T)));
     }
@@ -22,4 +27,3 @@ public:
         ptr->~T();
     }
 };
-
