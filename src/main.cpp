@@ -3,7 +3,7 @@
 #include "MyAllocator.h"
 
 int main(int, char **) {
-    MyContainer<int> cont{};
+    MyContainer<int, MyAllocator<int>> cont{MyAllocator<int>()};
     for (int i = 0; i < 100; ++i) {
         cont.push_back(i);
     }

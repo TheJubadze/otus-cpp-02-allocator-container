@@ -3,8 +3,10 @@
 template<typename T>
 class MyAllocator {
 public:
+    using value_type = T;
+
     T *allocate(size_t count) const {
-        return ::operator new(count * sizeof(T));
+        return reinterpret_cast<T *>(::operator new(count * sizeof(T)));
     }
 
     void deallocate(T *ptr, size_t) {
