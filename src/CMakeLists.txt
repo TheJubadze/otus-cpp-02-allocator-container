@@ -5,7 +5,7 @@ set(PROJECT_VESRION 0.0.${PATCH_VERSION})
 
 configure_file(version.h.in version.h)
 
-project(main VERSION ${PROJECT_VESRION})
+project(container-alloc-cli VERSION ${PROJECT_VESRION})
 
 add_executable(${PROJECT_NAME}
         main.cpp
