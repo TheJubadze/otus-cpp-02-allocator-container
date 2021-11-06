@@ -3,8 +3,11 @@
 #include <boost/math/special_functions/factorials.hpp>
 #include "MyContainer.h"
 #include "MyAllocator.h"
+#include "Log.h"
 
 int main(int, char **) {
+    Log::Log::Init();
+
     auto m = std::map<int, double, std::less<>, MyAllocator<std::pair<int, double>>>(
             MyAllocator<std::pair<int, double>>());
     for (int i = 0; i < 10; ++i) {
@@ -12,7 +15,7 @@ int main(int, char **) {
     }
 
     for (int i = 0; i < 10; ++i) {
-        std::cout << m[i] << std::endl;
+        std::cout << i << " " << m[i] << std::endl;
     }
 
     MyContainer<int, MyAllocator<int>> cont{MyAllocator<int>()};
