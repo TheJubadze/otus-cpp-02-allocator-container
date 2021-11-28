@@ -3,7 +3,8 @@
 #include <boost/math/special_functions/factorials.hpp>
 #include "MyContainer.h"
 #include "MyAllocator.h"
-#include "Log.h"
+
+using namespace OtusAllocator;
 
 int main(int, char **) {
     Log::Log::Init();
@@ -26,4 +27,7 @@ int main(int, char **) {
     for (int i = 0; i < 100; ++i) {
         std::cout << cont[i] << std::endl;
     }
+
+    return 0;
 }
+

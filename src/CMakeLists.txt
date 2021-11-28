@@ -1,22 +1,17 @@
-cmake_minimum_required(VERSION 3.10...3.21 FATAL_ERROR)
-
-set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
-set(PROJECT_VESRION 0.0.${PATCH_VERSION})
-
 configure_file(version.h.in version.h)
 
-project(container-alloc-cli VERSION ${PROJECT_VESRION})
+add_subdirectory(lib)
 
 add_executable(${PROJECT_NAME}
         main.cpp
+        Log.cpp
         MyContainer.h
-        MyAllocator.h
-        Log.h
-        Log.cpp)
+        )
+
+target_link_libraries(${PROJECT_NAME} PUBLIC MyAllocator)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${PROJECT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/spdlog/include)
+        ${CMAKE_CURRENT_LIST_DIR}/lib)
 
 IF (WIN32)
     SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "C:/dev/boost_1_77_0")
