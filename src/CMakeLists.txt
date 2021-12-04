@@ -1,17 +1,14 @@
 configure_file(version.h.in version.h)
 
-add_subdirectory(lib)
-
 add_executable(${PROJECT_NAME}
         main.cpp
         Log.cpp
-        MyContainer.h
         )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC MyAllocator)
-
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/lib)
+        ${CMAKE_CURRENT_LIST_DIR}/spdlog/include)
+
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 IF (WIN32)
     SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "C:/dev/boost_1_77_0")
