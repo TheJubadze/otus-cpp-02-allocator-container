@@ -12,15 +12,15 @@ namespace OtusAllocator {
         T *arr;
         size_t size{};
         size_t capacity;
-        TAllocator alloc;
+        TAllocator alloc = TAllocator();
 
         using AllocatorTraits = std::allocator_traits<TAllocator>;
 
         void DeleteArr();
 
     public:
-        explicit MyContainer(TAllocator allocator = TAllocator());
-        explicit MyContainer(size_t, const T &value = T(), TAllocator allocator = TAllocator());
+        explicit MyContainer();
+        explicit MyContainer(size_t, const T &value = T(), TAllocator &allocator = TAllocator());
         virtual ~MyContainer();
 
         void reserve(size_t n);
@@ -33,13 +33,13 @@ namespace OtusAllocator {
     };
 
     template<typename T, typename TAllocator>
-    MyContainer<T, TAllocator>::MyContainer(TAllocator allocator)
-            : alloc(allocator), capacity(1) {
+    MyContainer<T, TAllocator>::MyContainer()
+            : capacity(1) {
         arr = AllocatorTraits::allocate(alloc, sizeof(T));
     }
 
     template<typename T, typename TAllocator>
-    MyContainer<T, TAllocator>::MyContainer(size_t n, const T &value, TAllocator allocator)
+    MyContainer<T, TAllocator>::MyContainer(size_t n, const T &value, TAllocator &allocator)
             : MyContainer(allocator) {
         size = n;
         arr[size - 1] = value;

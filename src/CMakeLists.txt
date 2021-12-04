@@ -1,5 +1,3 @@
-configure_file(version.h.in version.h)
-
 add_executable(${PROJECT_NAME}
         main.cpp
         Log.cpp
