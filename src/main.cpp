@@ -9,8 +9,8 @@ using namespace OtusAllocator;
 int main(int, char **) {
     Log::Log::Init();
 
-    auto m = std::map<int, double, std::less<>, MyAllocator<std::pair<const int, double>>>(
-            MyAllocator<std::pair<const int, double>>());
+    auto m = std::map<int, double, std::less<>, MyAllocator<std::pair<const int, double>>>();
+
     for (int i = 0; i < 10; ++i) {
         m[i] = boost::math::factorial<double>(i);
     }
@@ -19,7 +19,8 @@ int main(int, char **) {
         std::cout << i << " " << m[i] << std::endl;
     }
 
-    MyContainer<int, MyAllocator<int>> cont{MyAllocator<int>()};
+    MyContainer<int, MyAllocator<int>> cont;
+
     for (int i = 0; i < 100; ++i) {
         cont.push_back(i);
     }
