@@ -10,7 +10,7 @@ namespace OtusAllocator {
         using value_type = T;
 
         MyAllocator();
-        virtual ~MyAllocator();
+        virtual ~MyAllocator() = default;
 
         template<typename U>
         explicit MyAllocator(const MyAllocator<U> &right);
@@ -63,7 +63,11 @@ namespace OtusAllocator {
     void MyAllocator<T>::deallocate(T *ptr, size_t n) {
         m_current -= n;
         m_inUse -= n;
-        MY_CORE_TRACE("{} bytes deallocated", n);
+        MY_CORE_TRACE("{0} bytes deallocated, {1} is use", n, m_inUse);
+        if (m_inUse <= 0) {
+            std::free(m_data);
+            MY_CORE_TRACE("Mempool freed!");
+        }
     }
 
     template<typename T>
@@ -80,25 +84,4 @@ namespace OtusAllocator {
         ptr->~T();
         MY_CORE_TRACE("Destroyed");
     }
-
-    template<typename T>
-    MyAllocator<T>::~MyAllocator() {
-        free(m_data); // ??????????????? Tries to access an object by deleted pointer ()
-
-//        std::_Container_base12::_Orphan_all_unlocked_v3() xmemory:1243
-//        std::_Container_base12::_Orphan_all_locked_v3() xmemory:1097
-//        std::_Container_base12::_Orphan_all() xmemory:1257
-//        std::_Tree_val::_Erase_head<…>(OtusAllocator::MyAllocator<…> &) xtree:757
-//        std::_Tree::~_Tree<…>() xtree:1094
-//                                      <unknown> 0x00007ff67eafee64
-//        main(int, char **) main.cpp:32
-//        invoke_main() 0x00007ff67eb5de79
-//        __scrt_common_main_seh() 0x00007ff67eb5dd5e
-//        __scrt_common_main() 0x00007ff67eb5dc1e
-//        mainCRTStartup(void *) 0x00007ff67eb5df0e
-//                               <unknown> 0x00007ffba5e77bd4
-//                               <unknown> 0x00007ffba69cce51
-
-    }
-
 }
