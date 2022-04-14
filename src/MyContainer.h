@@ -10,9 +10,9 @@ namespace OtusAllocator {
     class MyContainer {
     private:
         T *arr;
-        size_t size{};
-        size_t capacity;
-        TAllocator alloc = TAllocator();
+        size_t m_size{};
+        size_t m_capacity;
+        TAllocator m_alloc = TAllocator();
 
         using AllocatorTraits = std::allocator_traits<TAllocator>;
 
@@ -34,15 +34,15 @@ namespace OtusAllocator {
 
     template<typename T, typename TAllocator>
     MyContainer<T, TAllocator>::MyContainer()
-            : capacity(1) {
-        arr = AllocatorTraits::allocate(alloc, sizeof(T));
+        : m_capacity(1) {
+        arr = AllocatorTraits::allocate(m_alloc, 1);
     }
 
     template<typename T, typename TAllocator>
     MyContainer<T, TAllocator>::MyContainer(size_t n, const T &value, TAllocator &allocator)
-            : MyContainer(allocator) {
-        size = n;
-        arr[size - 1] = value;
+        : MyContainer(allocator) {
+        m_size = n;
+        arr[m_size - 1] = value;
     }
 
     template<typename T, typename TAllocator>
@@ -52,67 +52,67 @@ namespace OtusAllocator {
 
     template<typename T, typename TAllocator>
     void MyContainer<T, TAllocator>::reserve(size_t n) {
-        MY_TRACE("Reserving {}. Capacity = {}", n, capacity);
-        if (n <= capacity) {
+        MY_TRACE("Reserving {}. Capacity = {}", n, m_capacity);
+        if (n <= m_capacity) {
             return;
         }
 
         MY_TRACE("Allocating: {} x {} = {} bytes", n, sizeof(T), n * sizeof(T));
-        T *newArr = AllocatorTraits::allocate(alloc, n * sizeof(T));
+        T *newArr = AllocatorTraits::allocate(m_alloc, n);
         MY_TRACE("{} bytes allocated", n * sizeof(T));
 
         try {
             MY_TRACE("uninitialized_copy starting");
-            std::uninitialized_copy(arr, arr + size, newArr);
+            std::uninitialized_copy(arr, arr + m_size, newArr);
             MY_TRACE("uninitialized_copy success");
         } catch (...) {
             MY_ERROR("uninitialized_copy failed");
-            MY_TRACE("Deallocating {} elements...", size);
-            AllocatorTraits::deallocate(alloc, newArr, size);
-            MY_TRACE("{} elements deallocated", size);
+            MY_TRACE("Deallocating {} elements...", m_size);
+            AllocatorTraits::deallocate(m_alloc, newArr, m_size);
+            MY_TRACE("{} elements deallocated", m_size);
             throw;
         }
 
         DeleteArr();
 
         arr = newArr;
-        capacity = n;
+        m_capacity = n;
     }
 
     template<typename T, typename TAllocator>
     void MyContainer<T, TAllocator>::resize(size_t n, const T &value) {
-        MY_TRACE("Resizing {}. Capacity = {}", n, capacity);
-        if (n > capacity) {
+        MY_TRACE("Resizing {}. Capacity = {}", n, m_capacity);
+        if (n > m_capacity) {
             reserve(n);
         }
 
-        for (size_t i = size; i < n; ++i) {
+        for (size_t i = m_size; i < n; ++i) {
             MY_TRACE("resize: Constructing {}", i);
-            AllocatorTraits::construct(alloc, arr + i, value);
+            AllocatorTraits::construct(m_alloc, arr + i, value);
             MY_TRACE("resize: {} constructed", i);
         }
 
-        if (n < size) {
-            size = n;
+        if (n < m_size) {
+            m_size = n;
         }
     }
 
     template<typename T, typename TAllocator>
     void MyContainer<T, TAllocator>::push_back(const T &value) {
-        MY_TRACE("push_back {}. Capacity = {}. Size = {}", value, capacity, size);
-        if (capacity == size) {
-            reserve(2 * size);
+        MY_TRACE("push_back {}. Capacity = {}. Size = {}", value, m_capacity, m_size);
+        if (m_capacity == m_size) {
+            reserve(2 * m_size);
         }
 
         MY_TRACE("push_back: Constructing {}", value);
-        AllocatorTraits::construct(alloc, arr + size, value);
+        AllocatorTraits::construct(m_alloc, arr + m_size, value);
         MY_TRACE("push_back: {} constructed", value);
-        ++size;
+        ++m_size;
     }
 
     template<typename T, typename TAllocator>
     T &MyContainer<T, TAllocator>::at(size_t index) {
-        if (index >= size) {
+        if (index >= m_size) {
             throw std::out_of_range("Attempt out of range access");
         }
         return arr[index];
@@ -130,15 +130,16 @@ namespace OtusAllocator {
 
     template<typename T, typename TAllocator>
     void MyContainer<T, TAllocator>::DeleteArr() {
-        MY_TRACE("DeleteArr: {}", size);
-        for (size_t i = 0; i < this->size; ++i) {
-            MY_TRACE("Destroying {}", i);
-            AllocatorTraits::destroy(alloc, arr + i);
-            MY_TRACE("{} destroyed", i);
+        auto t = typeid(T).name();
+        MY_TRACE("Delete Arr<{}> [{}] elements", t, m_size);
+        for (size_t i = 0; i < this->m_size; ++i) {
+            MY_TRACE("Destroying ({})[{}] element = {}", t, i, arr[i]);
+            AllocatorTraits::destroy(m_alloc, arr + i);
+            MY_TRACE("({})[{}] element destroyed", t, i);
         }
 
-        MY_TRACE("Deallocating: {}", size);
-        AllocatorTraits::deallocate(alloc, arr, size);
-        MY_TRACE("{} deallocated", size);
+        MY_TRACE("Deallocating container of ({}){} elements", t, m_size);
+        AllocatorTraits::deallocate(m_alloc, arr, m_size);
+        MY_TRACE("Container of ({}){} elements deallocated", t, m_size);
     }
 }

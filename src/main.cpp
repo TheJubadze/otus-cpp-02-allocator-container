@@ -24,11 +24,11 @@ int main(int, char **) {
     {
         MyContainer<int, MyAllocator<int>> cont;
 
-        for (int i = 0; i < 1; ++i) {
-            cont.push_back(i);
+        for (int i = 0; i < 4; ++i) {
+            cont.push_back(i + 101);
         }
 
-        for (int i = 0; i < 1; ++i) {
+        for (int i = 0; i < 4; ++i) {
             std::cout << cont[i] << std::endl;
         }
     }
