@@ -67,7 +67,7 @@ namespace OtusAllocator {
             MY_TRACE("uninitialized_copy success");
         } catch (...) {
             MY_ERROR("uninitialized_copy failed");
-            MY_TRACE(" Deallocating {} elements...", size);
+            MY_TRACE("Deallocating {} elements...", size);
             AllocatorTraits::deallocate(alloc, newArr, size);
             MY_TRACE("{} elements deallocated", size);
             throw;

@@ -12,9 +12,6 @@ namespace OtusAllocator {
         MyAllocator();
         virtual ~MyAllocator() = default;
 
-        template<typename U>
-        explicit MyAllocator(const MyAllocator<U> &right);
-
         T *allocate(size_t count) const;
 
         void deallocate(T *ptr, size_t n);
@@ -37,51 +34,47 @@ namespace OtusAllocator {
 
     template<typename T>
     MyAllocator<T>::MyAllocator() {
+        MY_TRACE("A: Allocator() ctor");
         auto mem = malloc(OneMb);
         m_current = m_data = reinterpret_cast<char *>(mem);
     }
 
     template<typename T>
-    template<typename U>
-    MyAllocator<T>::MyAllocator(const MyAllocator<U> &right)
-            : MyAllocator() {
-        memcpy(m_data, right.m_data, m_inUse);
-        m_current += right.m_inUse;
-    };
-
-    template<typename T>
     T *MyAllocator<T>::allocate(size_t count) const {
-        MY_CORE_TRACE("Allocating: {} x {} = {} bytes", count, sizeof(T), count * sizeof(T));
+        MY_TRACE("A: Allocating: {} x {} = {} bytes", count, sizeof(T), count * sizeof(T));
         auto result = m_current;
         auto bytes = count * sizeof(T);
         m_current += bytes;
         m_inUse += bytes;
+        MY_TRACE("A: {} b allocated, {} b in use", bytes, m_inUse);
         return reinterpret_cast<T *>(result);
     }
 
     template<typename T>
     void MyAllocator<T>::deallocate(T *ptr, size_t n) {
-        m_current -= n;
-        m_inUse -= n;
-        MY_CORE_TRACE("{0} bytes deallocated, {1} is use", n, m_inUse);
+        auto bytes = n * sizeof(T);
+        MY_TRACE("A: Deallocating {} b, in use {} b", bytes, m_inUse);
+        m_current -= bytes;
+        m_inUse -= bytes;
+        MY_TRACE("A: {} b deallocated, {} b in use", bytes, m_inUse);
         if (m_inUse <= 0) {
             std::free(m_data);
-            MY_CORE_TRACE("Mempool freed!");
+            MY_TRACE("A: Mempool freed!");
         }
     }
 
     template<typename T>
     template<typename... TArgs>
     void MyAllocator<T>::construct(T *ptr, const TArgs &... args) {
-        MY_CORE_TRACE("Constructing");
+        MY_TRACE("A: Constructing");
         new(ptr) T(args...);
-        MY_CORE_TRACE("Constructed");
+        MY_TRACE("A: Constructed");
     }
 
     template<typename T>
     void MyAllocator<T>::destroy(T *ptr) {
-        MY_CORE_TRACE("Destroying");
+        MY_TRACE("A: Destroying");
         ptr->~T();
-        MY_CORE_TRACE("Destroyed");
+        MY_TRACE("A: Destroyed");
     }
 }

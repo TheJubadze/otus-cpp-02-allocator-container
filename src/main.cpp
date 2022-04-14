@@ -9,26 +9,29 @@ using namespace OtusAllocator;
 int main(int, char **) {
     Log::Log::Init();
 
-    std::map<int, double, std::less<>, MyAllocator<std::pair<const int, double>>> m;
+//    {
+//        std::map<int, double, std::less<>, MyAllocator<std::pair<const int, double>>> m;
+//
+//        for (int i = 0; i < 10; ++i) {
+//            m[i] = boost::math::factorial<double>(i);
+//        }
+//
+//        for (int i = 0; i < 10; ++i) {
+//            std::cout << i << " " << m[i] << std::endl;
+//        }
+//    }
 
-    for (int i = 0; i < 10; ++i) {
-        m[i] = boost::math::factorial<double>(i);
+    {
+        MyContainer<int, MyAllocator<int>> cont;
+
+        for (int i = 0; i < 1; ++i) {
+            cont.push_back(i);
+        }
+
+        for (int i = 0; i < 1; ++i) {
+            std::cout << cont[i] << std::endl;
+        }
     }
-
-    for (int i = 0; i < 10; ++i) {
-        std::cout << i << " " << m[i] << std::endl;
-    }
-
-    MyContainer<int, MyAllocator<int>> cont;
-
-    for (int i = 0; i < 100; ++i) {
-        cont.push_back(i);
-    }
-
-    for (int i = 0; i < 100; ++i) {
-        std::cout << cont[i] << std::endl;
-    }
-
     return 0;
 }
 

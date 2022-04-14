@@ -53,7 +53,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 build/*
-cmake-build-debug
+cmake-build-*
 c_cpp_properties.json
 my_test_img.ppm
 win.ppm
