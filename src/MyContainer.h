@@ -99,9 +99,9 @@ namespace OtusAllocator {
 
     template<typename T, typename TAllocator>
     void MyContainer<T, TAllocator>::push_back(const T &value) {
-        MY_TRACE("push_back {}. Capacity = {}. Size = {}", value, m_capacity, m_size);
+        MY_TRACE("push_back: value = {}, capacity = {}, size = {}", value, m_capacity, m_size);
         if (m_capacity == m_size) {
-            reserve(2 * m_size);
+            reserve(2 * m_capacity);
         }
 
         MY_TRACE("push_back: Constructing {}", value);
@@ -138,8 +138,8 @@ namespace OtusAllocator {
             MY_TRACE("({})[{}] element destroyed", t, i);
         }
 
-        MY_TRACE("Deallocating container of ({}){} elements", t, m_size);
-        AllocatorTraits::deallocate(m_alloc, arr, m_size);
-        MY_TRACE("Container of ({}){} elements deallocated", t, m_size);
+        MY_TRACE("Deallocating container of ({}){} elements", t, m_capacity);
+        AllocatorTraits::deallocate(m_alloc, arr, m_capacity);
+        MY_TRACE("Container of ({}){} elements deallocated", t, m_capacity);
     }
 }
