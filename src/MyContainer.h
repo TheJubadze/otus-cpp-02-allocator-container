@@ -20,7 +20,6 @@ namespace OtusAllocator {
 
     public:
         explicit MyContainer();
-        explicit MyContainer(size_t, const T &value = T(), TAllocator &allocator = TAllocator());
         virtual ~MyContainer();
 
         void reserve(size_t n);
@@ -36,13 +35,6 @@ namespace OtusAllocator {
     MyContainer<T, TAllocator>::MyContainer()
         : m_capacity(1) {
         arr = AllocatorTraits::allocate(m_alloc, 1);
-    }
-
-    template<typename T, typename TAllocator>
-    MyContainer<T, TAllocator>::MyContainer(size_t n, const T &value, TAllocator &allocator)
-        : MyContainer(allocator) {
-        m_size = n;
-        arr[m_size - 1] = value;
     }
 
     template<typename T, typename TAllocator>

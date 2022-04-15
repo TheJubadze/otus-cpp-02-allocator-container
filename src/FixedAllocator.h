@@ -28,7 +28,7 @@ struct FixedAllocator
     };
 
     /// @brief Конструктор
-    FixedAllocator();
+    FixedAllocator() = default;
 
     /// @brief Деструктор
     ~FixedAllocator() = default;

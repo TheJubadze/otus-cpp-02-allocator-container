@@ -3,6 +3,7 @@
 #include <boost/math/special_functions/factorials.hpp>
 #include "MyContainer.h"
 #include "MyAllocator.h"
+#include "FixedAllocator.h"
 
 using namespace OtusAllocator;
 
@@ -22,7 +23,7 @@ int main(int, char **) {
 //    }
 
     {
-        MyContainer<int, MyAllocator<int>> cont;
+        MyContainer<int, FixedAllocator<int, 1024>> cont;
 
         for (int i = 0; i < 2; ++i) {
             cont.push_back(i + 101);
