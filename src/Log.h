@@ -19,4 +19,3 @@ namespace Log {
 #define MY_INFO(...)       ::Log::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define MY_WARN(...)       ::Log::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define MY_ERROR(...)      ::Log::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define MY_FATAL(...)      ::Log::Log::GetCoreLogger()->fatal(__VA_ARGS__)
